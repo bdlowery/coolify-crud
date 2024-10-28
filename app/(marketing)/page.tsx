@@ -1,5 +1,7 @@
 import getPosts from './components/data/get-posts'
 
+export const revalidate = 86400 // 1 day
+
 export default async function Home() {
 	const response = await getPosts()
 	// console.log('posts home', response)
