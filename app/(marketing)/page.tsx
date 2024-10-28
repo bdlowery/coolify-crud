@@ -8,7 +8,7 @@ export default async function Home() {
 			<div className="">
 				<div className="container">
 					<div className="max-w-xl mx-auto">
-						<h1 className="text-3xl mb-4">home</h1>
+						<h1 className="text-3xl mb-4">Home</h1>
 
 						<div className="flex flex-row flex-wrap gap-4">
 							{response.map(function (post) {
