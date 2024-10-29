@@ -1,9 +1,12 @@
+import getCachedPosts from '../components/data/get-posts'
 import getPosts from './components/data/get-posts'
 
+// because I get an error if I don't include
 export const revalidate = 86400 // 1 day
 
 export default async function Home() {
-	const response = await getPosts()
+	// const response = await getPosts()
+	const response = await getCachedPosts()
 	// console.log('posts home', response)
 	return (
 		<section className="py-20">

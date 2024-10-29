@@ -1,22 +1,21 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
+import { createPost } from './actions'
 
 export default function PostsPage() {
 	const [title, setTitle] = useState('')
 	const [content, setContent] = useState('')
 
-	async function onSubmit(e: React.FormEvent) {
+	const [isPending, startTransition] = useTransition()
+
+	const onSubmit = (e: React.FormEvent) => {
 		e.preventDefault()
-		const data: any = await fetch('/api/post/create', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({ title, content }),
+		startTransition(() => {
+			createPost({ title, content })
 		})
-		console.log(data)
 	}
+
 	return (
 		<section className="py-20">
 			<div className="container">
@@ -25,17 +24,17 @@ export default function PostsPage() {
 					<div>
 						<form onSubmit={onSubmit} className="flex flex-col">
 							<div className="flex flex-col">
-								<label>post title</label>
+								<label>Post Title</label>
 								<input type="text" className="border" onChange={(e) => setTitle(e.target.value)} />
 							</div>
 
 							<div className="flex flex-col">
-								<label>post content</label>
+								<label>Post Content</label>
 								<textarea className="border" onChange={(e) => setContent(e.target.value)} />
 							</div>
 							<div>
-								<button type="submit" className="border bg-zinc-300 p-2">
-									add post
+								<button type="submit" className="border bg-zinc-300 p-2" disabled={isPending}>
+									Add Post
 								</button>
 							</div>
 						</form>

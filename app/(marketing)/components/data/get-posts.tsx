@@ -9,6 +9,7 @@ export async function fetchPosts() {
 
 const getCachedPosts = memoize(fetchPosts, {
 	revalidateTags: ['posts'],
+	// persist: false,
 })
 
 export default async function getPosts() {
