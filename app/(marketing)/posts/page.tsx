@@ -1,19 +1,36 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { createPost } from './actions'
 
 export default function PostsPage() {
 	const [title, setTitle] = useState('')
 	const [content, setContent] = useState('')
 
-	const [isPending, startTransition] = useTransition()
-
-	const onSubmit = (e: React.FormEvent) => {
+	const [isPending, setIsPending] = useState(false)
+	async function onSubmit(e: React.FormEvent) {
 		e.preventDefault()
-		startTransition(() => {
-			createPost({ title, content })
-		})
+		setIsPending(true)
+
+		try {
+			const response = await fetch('/api/post/create', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ title, content }),
+			})
+
+			if (response.ok) {
+				setTitle('')
+				setContent('')
+			} else {
+				console.error('Failed to create post')
+			}
+		} catch (error) {
+			console.error('An error occurred:', error)
+		} finally {
+			setIsPending(false)
+		}
 	}
 
 	return (
@@ -25,16 +42,16 @@ export default function PostsPage() {
 						<form onSubmit={onSubmit} className="flex flex-col">
 							<div className="flex flex-col">
 								<label>Post Title</label>
-								<input type="text" className="border" onChange={(e) => setTitle(e.target.value)} />
+								<input type="text" className="border" value={title} onChange={(e) => setTitle(e.target.value)} />
 							</div>
 
 							<div className="flex flex-col">
 								<label>Post Content</label>
-								<textarea className="border" onChange={(e) => setContent(e.target.value)} />
+								<textarea className="border" value={content} onChange={(e) => setContent(e.target.value)} />
 							</div>
 							<div>
 								<button type="submit" className="border bg-zinc-300 p-2" disabled={isPending}>
-									Add Post
+									{isPending ? 'Pending' : 'Add Post'}
 								</button>
 							</div>
 						</form>

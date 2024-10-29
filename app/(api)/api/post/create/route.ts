@@ -17,5 +17,5 @@ export async function POST(req: Request) {
 
 	revalidateTag('posts')
 
-	return NextResponse.json({ data: { url: `asd` }, success: true, message: 'Created post' }, { status: 200 })
+	return NextResponse.json({ success: true, message: 'Created post' }, { status: 200 })
 }
